@@ -3,6 +3,7 @@ import { Card } from 'react-bootstrap';
 const ReactMeteoCardCity = ({ weatherData }) => {
   return (
     <Card className="mb-4">
+        {weatherData.imageUrl && <Card.Img variant="top" src={weatherData.imageUrl} />}
       <Card.Body>
         <Card.Title>{weatherData.name}</Card.Title>
         <Card.Text>

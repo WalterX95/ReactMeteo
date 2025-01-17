@@ -9,6 +9,20 @@ const ReactMeteoSearchBar = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
 
+  const fetchCityImage = async (city) => {
+    const unsplashKey = 'sDhxK4GTAOmCs9G4saWRHXWHZ0v-MbFhDr0WBpLw6Kk';
+    const url = `https://api.unsplash.com/search/photos?query=${city}&client_id=${unsplashKey}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      return data.results[0]?.urls.small || null;
+    } catch (error) {
+      console.error('Errore nel recupero immagine:', error);
+      return null;
+    }
+  };
+  
+
   const fetchWeatherData = async () => {
     const apiKey = '045d05c46810ac7f184ef1336cc7e0f3';
     const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city},IT&appid=${apiKey}&units=metric`;
@@ -18,14 +32,16 @@ const ReactMeteoSearchBar = () => {
       const data = await response.json();
 
       if (response.ok) {
+        const imageUrl = await fetchCityImage(city);
         setWeatherData({
           name: data.name,
           description: data.weather[0].description,
           temp: data.main.temp,
           wind: data.wind.speed,
+          imageUrl: imageUrl
         });
 
-        // Dummy forecast data as OpenWeatherMap free tier doesn't provide it
+        
         setForecastData([
           { day: 'Oggi', description: 'Sereno', temp: 22 },
           { day: 'il giorno dopo', description: 'Nuvoloso', temp: 20 },
